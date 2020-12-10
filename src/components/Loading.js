@@ -15,7 +15,7 @@ let Loading = ({ isLoaded }) =>
       zIndex: 300,
       opacity: !isLoaded ? 1 : 0,
       visibility: !isLoaded ? 'visible' : 'hidden',
-      transition: 'opacity 1s, visibility 0.5s linear 2s',
+      transition: 'opacity 1s, visibility 0.5s linear 1s',
     }}>
       <AnimatedImage src={LogoImage} height={120} />
     </div>
@@ -52,7 +52,7 @@ const LoadingBackground = styled.div`
   z-index: 200;
   opacity: ${({ isLoaded }) => isLoaded ? 0 : 1};
   visibility: ${({ isLoaded }) => isLoaded ? 'hidden' : 'visible'};
-  transition: 'opacity 1s, 0.5s linear 2s'; 
+  transition: opacity 1s, visibility 0.5s linear 1s; 
 `;
 
 

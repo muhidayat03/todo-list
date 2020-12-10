@@ -2,25 +2,23 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { renderInput } from './FormComponent'
+import { renderInput, renderSelect } from './FormComponent'
 import { reduxForm, Field } from "redux-form";
 import { useDispatch } from "react-redux";
 import { addTodo } from '../actions/todo_action';
+import { connect } from "react-redux";
 
 
-let ModalAdd = ({ show, setShow, action, handleSubmit, reset }) => {
+let ModalDetail = ({ show, setShow, action, handleSubmit, reset }) => {
+
   const dispatch = useDispatch();
-  const onSubmit = ({ title, description }) => {
-    let param = {
-      title,
-      description,
-      status: 0,
-      createdAt: new Date()
-    };
-    dispatch(addTodo(param));
+
+  const onSubmit = ({ title, description, id, status }) => {
+    dispatch(addTodo(id));
     setShow(false);
     reset();
   };
+
 
 
   return <Modal
@@ -42,22 +40,26 @@ let ModalAdd = ({ show, setShow, action, handleSubmit, reset }) => {
           name="title"
           placeholder="Title"
           component={renderInput}
+          disabled
         />
         <Field
           name="description"
           placeholder="Description"
           component={renderInput}
+          disabled
+        />
+        <Field
+          name="status"
+          placeholder="Status"
+          component={renderSelect}
+          disabled
         />
         <div style={{ marginTop: 40, display: 'flex', flexDirection: 'row-reverse' }}>
-          <Button variant="primary" type="submit">
-            Submit
+          <Button variant="primary" type="button" onClick={() => setShow(false)}>
+            Close
        </Button>
         </div>
       </Form>
-
-
-
-
     </Modal.Body>
   </Modal>
 
@@ -78,13 +80,30 @@ function validate(values) {
 }
 
 
-ModalAdd = reduxForm({
+ModalDetail = reduxForm({
   // a unique name for the form
-  form: "ModalAdd",
+  form: "ModalDetail",
   validate: validate,
   // keepDirtyOnReinitialize: true,
   shouldError: () => true,
   enableReinitialize: true,
-})(ModalAdd);
+})(ModalDetail);
 
-export default ModalAdd;
+
+ModalDetail = connect(({ listTodo }) => {
+  let initialValues = {};
+  if (listTodo.selected) {
+    const {
+      title, status, description,
+    } = listTodo.selected;
+    initialValues = {
+      title,
+      status,
+      description,
+
+    };
+  }
+  return { initialValues: initialValues };
+})(ModalDetail);
+
+export default ModalDetail;

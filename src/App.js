@@ -1,27 +1,90 @@
-import logo from './logo.svg';
 import './App.css';
 import Loading from './components/Loading';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ArrowRight, FileEarmarkFill, Trash2Fill, PencilFill } from 'react-bootstrap-icons';
+import { FileEarmarkFill, Trash2Fill, PencilFill } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
+import { useSelector, useDispatch } from "react-redux";
+import { listTodo, setSelected, } from './actions/todo_action';
 
 
 import ModalAdd from './components/ModalAdd';
+import ModalEdit from './components/ModalEdit';
+import ModalDetail from './components/ModalDetail';
+import ModalDelete from './components/ModalDelete';
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
   const [showAdd, setShowAdd] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const { data } = useSelector((state) => state.listTodo);
+  const dispatch = useDispatch();
+
+
+
+
+  const handleDetail = async (id) => {
+    dispatch(setSelected(id));
+    setShowDetail(true);
+  };
+  const handleEdit = async (id) => {
+    dispatch(setSelected(id));
+    setShowEdit(true);
+  };
+  const handleDelete = async (id) => {
+    dispatch(setSelected(id));
+    setShowDelete(true);
+  };
+
 
 
   useEffect(() => {
+    dispatch(listTodo());
     setTimeout(() => setIsLoading(true), 2000)
-  }, []);
+  }, [dispatch]);
+
+  let doneList = null;
+  let todoList = null;
+  if (data) {
+    console.log('data', data)
+    todoList = data.filter(({ status }) => status === 0).sort((a, b) => b.createdAt - a.createdAt).reverse().map(({ title, id }) => <ListItem key={id}>
+      <div>{title}</div>
+      <div style={{ display: 'flex' }}>
+        <IconButton onClick={() => handleDetail(id)}>
+          <FileEarmarkFill />
+        </IconButton>
+        <IconButton onClick={() => handleEdit(id)}>
+          <PencilFill />
+        </IconButton>
+        <IconButton onClick={() => handleDelete(id)}>
+          <Trash2Fill />
+        </IconButton>
+      </div>
+    </ListItem>);
+    doneList = data.filter(({ status }) => status === 1).sort((a, b) => b.createdAt - a.createdAt).map(({ title, id }) => <ListItem done key={id}>
+      <div>{title}</div>
+      <div style={{ display: 'flex' }}>
+        <IconButton onClick={() => handleDetail(id)}>
+          <FileEarmarkFill />
+        </IconButton>
+        <IconButton onClick={() => handleEdit(id)}>
+          <PencilFill />
+        </IconButton>
+
+      </div>
+    </ListItem>);
+  }
 
 
   return (
     <div>
       <ModalAdd show={showAdd} setShow={setShowAdd} />
+      <ModalDetail show={showDetail} setShow={setShowDetail} />
+      <ModalEdit show={showEdit} setShow={setShowEdit} />
+      <ModalDelete show={showDelete} setShow={setShowDelete} />
       <Loading isLoaded={isLoading} />
       <Main>
         <Title>TODO LIST APP</Title>
@@ -31,59 +94,28 @@ function App() {
             <Button onClick={() => setShowAdd(true)}>Add Todo</Button>
 
           </div>
-          <ListItem>
-            <div>add</div>
-            <div style={{ display: 'flex' }}>
-              <IconButton>
-                <FileEarmarkFill />
-              </IconButton>
-              <IconButton>
-                <PencilFill />
-              </IconButton>
-              <IconButton>
-                <Trash2Fill />
-              </IconButton>
-            </div>
-          </ListItem>
+          {todoList}
           <section style={{ marginTop: 60 }}>
             <div style={{ marginBottom: 20 }}>
               <SubTitle>DONE</SubTitle>
             </div>
-            <ListItem>
-              <div>testing</div>
-              <div style={{ display: 'flex' }}>
-                <IconButton>
-                  <FileEarmarkFill />
-                </IconButton>
-                <IconButton>
-                  <PencilFill />
-                </IconButton>
-                <IconButton>
-                  <Trash2Fill />
-                </IconButton>
-              </div>
-            </ListItem>
+            {doneList}
           </section>
         </ContentContainer>
       </Main>
 
-    </div>
+    </div >
   );
 }
 
 const Main = styled.div`
-  height: 100vh; 
-  background: rgb(41,188,179);
-  background: linear-gradient(0deg, rgba(41,188,179,1) 0%, rgba(146,206,137,1) 100%);
   padding: 20px;
 `;
 
 const ContentContainer = styled.div` 
   margin: 40px auto ; 
   width: 100%;
-  max-width: 800px; 
-  min-height: 300px;
-  min-height: 300px;
+  max-width: 800px;  
   padding: 20px; 
   background-color: #FAFAFB;
   /* display: flex;  */
@@ -107,6 +139,7 @@ const ListItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-decoration:${({ done }) => done ? 'line-through' : 'none'};
 `;
 
 const IconButton = styled.div`
@@ -145,10 +178,5 @@ const SubTitle = styled.h1`
   color: rgba(146,206,137,1);
   font-family: 'Poppins', sans-serif; 
 `;
-
-
-
-
-
 
 export default App;

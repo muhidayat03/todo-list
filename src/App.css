@@ -63,7 +63,10 @@
 
 .modal-title.h4{
   color:  rgba(146,206,137,1) !important;
+}
 
+.text-muted.form-text{
+  color: red !important;
 }
 
 
