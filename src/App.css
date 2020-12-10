@@ -2,6 +2,7 @@
   text-align: center;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +37,34 @@
     transform: rotate(360deg);
   }
 }
+.btn-primary {
+  background-color: rgba(146,206,137,1)!important;
+  border-color: rgba(146,206,137,1) !important;  
+  color: white;
+}
+.btn-primary:hover{ 
+  background-color: rgb(113, 168, 105) !important;   
+}
+.btn-primary:focus {
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff; 
+  border-color: rgba(146,206,137,1) !important;  
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.modal-header{
+  border: none !important
+}
+
+.modal-title.h4{
+  color:  rgba(146,206,137,1) !important;
+
+}
+
+
+
