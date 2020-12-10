@@ -117,8 +117,7 @@ const ContentContainer = styled.div`
   width: 100%;
   max-width: 800px;  
   padding: 20px; 
-  background-color: #FAFAFB;
-  /* display: flex;  */
+  background-color: #FAFAFB; 
   padding: 40px; 
   border-radius: 10px;
   -webkit-box-shadow: 0px 0px 45px 0px rgba(0,0,0,0.23);
@@ -172,6 +171,7 @@ const Title = styled.h1`
   color: white; 
   font-family: 'Poppins', sans-serif; 
 `;
+
 const SubTitle = styled.h1`
   font-size: 28px;
   font-weight: 600;
