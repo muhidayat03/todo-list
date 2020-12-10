@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import { useSelector, useDispatch } from "react-redux";
 import { listTodo, setSelected, } from './actions/todo_action';
+import LogoImage from './assets/majo-logo-white.png';
 
 
 import ModalAdd from './components/ModalAdd';
@@ -14,7 +15,7 @@ import ModalEdit from './components/ModalEdit';
 import ModalDetail from './components/ModalDetail';
 import ModalDelete from './components/ModalDelete';
 function App() {
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -39,12 +40,27 @@ function App() {
     setShowDelete(true);
   };
 
+  const loadImage = image => {
+    return new Promise((resolve, reject) => {
+      const loadImg = new Image()
+      loadImg.src = image
+      loadImg.onload = () =>
+        setTimeout(() => {
+          resolve(image.url)
+        }, 2000)
+      loadImg.onerror = err => reject(err)
+    })
+  }
 
 
+  const handleLoading = async () => {
+    await loadImage(LogoImage);
+    await dispatch(listTodo());
+    setTimeout(() => setIsLoading(true), 200);
+  };
   useEffect(() => {
-    dispatch(listTodo());
-    setTimeout(() => setIsLoading(true), 2000)
-  }, [dispatch]);
+    handleLoading()
+  }, []);
 
   let doneList = null;
   let todoList = null;
